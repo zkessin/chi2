@@ -1,0 +1,12 @@
+{application, chi2,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { chi2_app, []}},
+  {env, []}
+ ]}.
