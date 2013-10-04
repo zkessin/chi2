@@ -8,6 +8,22 @@
 -type(chi2_row()    ::{integer(), integer()}).
 -type(chi2_vector() ::[chi2_row()]).
 
+
+-spec(corilation(chi2_vector(), number()) -> boolean()).
+corilation(V, Threadhold) -> 
+  case chi2(V) of 
+    corrilation_lt_threashhold  -> false;
+    Corr when Corr < Threadhold -> false;
+    _ -> true
+  end.
+-spec(chi2(chi2_vector()) -> number()|corrilation_lt_threashhold).
+chi2(V) ->
+  DOF    = get_degrees_of_freedom(V),
+  ExVals = get_ex_cell_values(V),
+  Sum    = get_chi2_sum(V, ExVals),
+  table(DOF, Sum).
+
+
 -spec(get_total(chi2_vector()) -> number()).
 get_total(Vector) ->
   lists:sum([F+S|| {F,S} <- Vector]).
@@ -27,6 +43,7 @@ get_column_total(1,V) ->
   
 get_column_total(2,V) ->
   lists:sum([S || {_F,S} <-V]).
+
 
 get_ex_cell_values(V) ->
   Total = get_total(V),
@@ -49,9 +66,11 @@ square(E) -> E*E.
 compute_cell(O,E) ->
   square(O - E) / E.
 
+
 compute_row({Fo, Fs},{Eo, Es}) ->
   compute_cell(Fo, Eo) + 
     compute_cell(Fs, Es).
+
 
 get_chi2_sum(V, E) ->
   Combined = lists:zipwith(fun compute_row/2, E,V),
