@@ -1,12 +1,12 @@
+%-*- Erlang-*-
 {application, chi2,
  [
-  {description, ""},
+  {description, "Chi Squared Test for Erlang"},
   {vsn, "1"},
   {registered, []},
   {applications, [
                   kernel,
                   stdlib
                  ]},
-  {mod, { chi2_app, []}},
   {env, []}
  ]}.
