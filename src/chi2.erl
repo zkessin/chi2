@@ -9,6 +9,11 @@
 -type(chi2_vector() ::[chi2_row()]).
 
 
+chi95(V) -> 
+  corilation(V, 0.95).
+chi99(V) -> 
+  corilation(V, 0.99).
+
 -spec(corilation(chi2_vector(), number()) -> boolean()).
 corilation(V, Threadhold) -> 
   case chi2(V) of 
