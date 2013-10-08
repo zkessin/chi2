@@ -9,9 +9,16 @@
 -type(chi2_vector() ::[chi2_row()]).
 -export_type([chi2_row/0, chi2_vector/0]).
 
+
+-spec(chi80(chi2_vector()) -> boolean()).
+chi80(V) -> corilation(V, 0.80).
+
+-spec(chi90(chi2_vector()) -> boolean()).
+chi90(V) -> corilation(V, 0.90).
+
+
 -spec(chi95(chi2_vector()) -> boolean()).
-chi95(V) -> 
-  corilation(V, 0.95).
+chi95(V) -> corilation(V, 0.95).
 
 
 -spec(chi99(chi2_vector()) -> boolean()).
@@ -21,15 +28,15 @@ chi99(V) ->
 -spec(corilation(chi2_vector(), number()) -> boolean()).
 corilation(V, Threadhold) ->
   case chi2(V) of
-    corrilation_lt_threashhold  -> false;
+    no                          -> false;
     Corr when Corr < Threadhold -> false;
-    _ -> true
+    _                           -> true
   end.
 
 
--spec(chi2(chi2_vector()) -> number()|corrilation_lt_threashhold).
+-spec(chi2(chi2_vector()) -> number()|no).
 chi2(V) ->
-  case get_total(V) of 
+  case get_total(V) of
     0 -> 0;
     _ ->
         DOF    = get_degrees_of_freedom(V),
@@ -97,10 +104,12 @@ table(1, Sum) when Sum > 6.635  -> 0.990;
 table(1, Sum) when Sum > 5.024  -> 0.990;
 table(1, Sum) when Sum > 3.841  -> 0.950;
 table(1, Sum) when Sum > 2.706  -> 0.900;
+table(1, Sum) when Sum > 1.64   -> 0.800;
 table(2, Sum) when Sum > 10.597 -> 0.995;
 table(2, Sum) when Sum > 9.210  -> 0.990;
 table(2, Sum) when Sum > 7.378  -> 0.975;
 table(2, Sum) when Sum > 5.991  -> 0.950;
 table(2, Sum) when Sum > 4.605  -> 0.900;
-table(_,_) -> corrilation_lt_threashhold.
+table(2, Sum) when Sum > 3.22   -> 0.800;
+  table(_,_) -> no.
 
