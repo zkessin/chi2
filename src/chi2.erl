@@ -7,27 +7,36 @@
 
 -type(chi2_row()    ::{integer(), integer()}).
 -type(chi2_vector() ::[chi2_row()]).
+-export_type([chi2_row/0, chi2_vector/0]).
 
-
+-spec(chi95(chi2_vector()) -> boolean()).
 chi95(V) -> 
   corilation(V, 0.95).
+
+
+-spec(chi99(chi2_vector()) -> boolean()).
 chi99(V) -> 
   corilation(V, 0.99).
 
 -spec(corilation(chi2_vector(), number()) -> boolean()).
-corilation(V, Threadhold) -> 
-  case chi2(V) of 
+corilation(V, Threadhold) ->
+  case chi2(V) of
     corrilation_lt_threashhold  -> false;
     Corr when Corr < Threadhold -> false;
     _ -> true
   end.
+
+
 -spec(chi2(chi2_vector()) -> number()|corrilation_lt_threashhold).
 chi2(V) ->
-  DOF    = get_degrees_of_freedom(V),
-  ExVals = get_ex_cell_values(V),
-  Sum    = get_chi2_sum(V, ExVals),
-  table(DOF, Sum).
-
+  case get_total(V) of 
+    0 -> 0;
+    _ ->
+        DOF    = get_degrees_of_freedom(V),
+        ExVals = get_ex_cell_values(V),
+        Sum    = get_chi2_sum(V, ExVals),
+        table(DOF, Sum)
+    end.
 
 -spec(get_total(chi2_vector()) -> number()).
 get_total(Vector) ->
@@ -76,10 +85,10 @@ compute_row({Fo, Fs},{Eo, Es}) ->
   compute_cell(Fo, Eo) + 
     compute_cell(Fs, Es).
 
-
+get_chi2_sum(0, _) -> 0;
 get_chi2_sum(V, E) ->
   Combined = lists:zipwith(fun compute_row/2, E,V),
-    lists:sum(Combined).
+  lists:sum(Combined).
 
 
 -spec(table(1|2, number) -> number() | corrilation_lt_threashhold).
