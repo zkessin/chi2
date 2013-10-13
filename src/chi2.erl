@@ -83,7 +83,7 @@ get_ex_cell_values(V) ->
 -spec(square(number()) -> number()).
 square(E) -> E*E.
 
-
+compute_cell(_O,0) -> 0;
 compute_cell(O,E) ->
   square(O - E) / E.
 
@@ -98,7 +98,7 @@ get_chi2_sum(V, E) ->
   lists:sum(Combined).
 
 
--spec(table(1|2, number) -> number() | corrilation_lt_threashhold).
+-spec(table(1|2, number) -> number() | no).
 table(1, Sum) when Sum > 7.879  -> 0.995;
 table(1, Sum) when Sum > 6.635  -> 0.990;
 table(1, Sum) when Sum > 5.024  -> 0.990;
@@ -111,5 +111,11 @@ table(2, Sum) when Sum > 7.378  -> 0.975;
 table(2, Sum) when Sum > 5.991  -> 0.950;
 table(2, Sum) when Sum > 4.605  -> 0.900;
 table(2, Sum) when Sum > 3.22   -> 0.800;
-  table(_,_) -> no.
+table(3, Sum) when Sum > 12.838 -> 0.995;
+table(3, Sum) when Sum > 11.375 -> 0.990;
+table(3, Sum) when Sum > 9.348	-> 0.975;
+table(3, Sum) when Sum > 7.815  -> 0.950;
+table(3, Sum) when Sum > 6.251  -> 0.900;
+table(3, Sum) when Sum > 4.64   -> 0.800;
+table(_,_) -> no.
 
